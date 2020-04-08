@@ -5,7 +5,19 @@ set -e
 # Needed later
 QEMU=/usr/bin/qemu-arm-static
 
-[ -x ${QEMU} ] || apt-get install qemu qemu-user-static binfmt-support
+ARCH=$(dpkg --print-architecture)
+
+if [[ "${ARCH}" == "armhf" ]]; then
+  QEMU=
+fi
+
+if [[ "${ARCH}" == "arm64" ]]; then
+  QEMU=
+fi
+
+if [[ ! -z "${QEMU}" ]]; then
+  [ -x ${QEMU} ] || apt-get install qemu qemu-user-static binfmt-support
+fi
 
 # Set IMG variable
 IMG=$1
@@ -29,9 +41,11 @@ mount --bind {,${MNT}}/proc
 mount --bind {,${MNT}}/dev/pts
 # UNDO: umount ${MNT}/{dev{/pts,},sys,proc}
 
-# Make QEMU binary available in chroot
-cp {,${MNT}}${QEMU}
-# UNDO: rm ${MNT}${QEMU}
+if [[ ! -z "${QEMU}" ]]; then
+  # Make QEMU binary available in chroot
+  cp {,${MNT}}${QEMU}
+  # UNDO: rm ${MNT}${QEMU}
+fi
 
 # Prepare ld.preload for chroot
 sed -i 's/^/#CHROOT /g' ${MNT}/etc/ld.so.preload
@@ -45,7 +59,9 @@ chroot ${MNT} /bin/bash
 echo Cleaning up...
 
 # Full reset
-rm ${MNT}${QEMU}
+if [[ ! -z "${QEMU}" ]]; then
+  rm ${MNT}${QEMU}
+fi
 sed -i 's/^#CHROOT //g' ${MNT}/etc/ld.so.preload
 umount ${MNT}{/{boot,dev{/pts,},sys,proc},}
 losetup -d ${LOOP}
