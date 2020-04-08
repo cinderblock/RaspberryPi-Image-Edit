@@ -1,3 +1,5 @@
+# Usage
+
 1. Download a Raspbian image and unzip it: 
    ```bash
    wget https://downloads.raspberrypi.org/raspbian_lite_latest --trust-server-names --continue --quiet
