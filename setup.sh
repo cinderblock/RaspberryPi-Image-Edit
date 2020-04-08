@@ -37,7 +37,7 @@ EOF_WPA
 sed -e s/raspberrypi/myHostname/ -i /etc/host{s,name}
 
 # Set Timezone
-ln -snf /usr/share/zoninfo/America/Los_Angeles /etc/localtime
+ln -snf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
 
 # Update
 apt-get update
