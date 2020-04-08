@@ -1,6 +1,8 @@
 #!/bin/bash
 
 IMG=$1
+
+# Default to 100MB
 MEGA=${2:-100}
 
 # Create a dummy partition to help defaults later
@@ -13,7 +15,7 @@ n
 w
 EOF
 
-# Grow by 100MB
+# Add zeros to the end of the img file
 dd if=/dev/zero bs=1M count=${MEGA} >> ${IMG}
 
 # Grow by deleting existing partition and creating a new one in the same place, but bigger.
