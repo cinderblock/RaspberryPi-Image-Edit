@@ -31,12 +31,12 @@ w
 EOF
 
 # Setup loop device for image
-LOOP=$(sudo losetup -Pf ${IMG} --show)
+LOOP=$(losetup -Pf ${IMG} --show)
 # Check fs because we can
-sudo e2fsck -f ${LOOP}p2
+e2fsck -f ${LOOP}p2
 # Grow the ext partition
-sudo resize2fs ${LOOP}p2
+resize2fs ${LOOP}p2
 # Check fs again because we can
-sudo e2fsck -f ${LOOP}p2
+e2fsck -f ${LOOP}p2
 # Cleanup loop device
-sudo losetup -d ${LOOP}
+losetup -d ${LOOP}

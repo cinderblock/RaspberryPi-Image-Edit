@@ -10,7 +10,7 @@ unzip 2020-02-13-raspbian-buster-lite.zip
 Now, we can use scripts:
 
 ```
-sudo ./setup.sh 2020-02-13-raspbian-buster-lite.img [mount point]
+sudo ./prepare.sh 2020-02-13-raspbian-buster-lite.img [mount point]
 sudo ./chroot.sh 2020-02-13-raspbian-buster-lite.img [mount point]
 sudo ./grow.sh 2020-02-13-raspbian-buster-lite.img [megabytes]
 ```

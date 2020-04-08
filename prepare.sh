@@ -37,12 +37,20 @@ cp {,${MNT}}${QEMU}
 sed -i 's/^/#CHROOT /g' ${MNT}/etc/ld.so.preload
 # UNDO: sed -i 's/^#CHROOT //g' ${MNT}/etc/ld.so.preload
 
-echo Chrooting...
+# Copy setup script to image
+cp {,${MNT}/}setup.sh
+chmod +x ${MNT}/setup.sh
+# UNDO: rm ${MNT}/setup.sh
+
+echo Setting up...
 
 # Run the script in Chroot
-chroot ${MNT} /bin/bash
+chroot ${MNT} /setup.sh
 
 echo Cleaning up...
+
+# cleanup script
+rm ${MNT}/setup.sh
 
 # Full reset
 rm ${MNT}${QEMU}
