@@ -54,7 +54,7 @@ sed -i 's/^/#CHROOT /g' ${MNT}/etc/ld.so.preload
 echo Chrooting...
 
 # Run the script in Chroot
-chroot ${MNT} /bin/bash
+chroot ${MNT} /bin/bash || :
 
 echo Cleaning up...
 

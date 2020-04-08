@@ -59,7 +59,7 @@ chmod +x ${MNT}/setup.sh
 echo Setting up...
 
 # Run the script in Chroot
-chroot ${MNT} /setup.sh
+chroot ${MNT} /setup.sh || :
 
 echo Cleaning up...
 
