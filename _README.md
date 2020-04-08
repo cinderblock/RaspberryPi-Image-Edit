@@ -11,12 +11,15 @@
    chmod +x {prepare,chroot,grow}.sh
    ```
 3. Edit `setup.sh` as desired.
-4. Run scripts:
-   ```
-   sudo ./prepare.sh 2020-02-13-raspbian-buster-lite.img [mount point]
-   sudo ./chroot.sh 2020-02-13-raspbian-buster-lite.img [mount point]
-   sudo ./grow.sh 2020-02-13-raspbian-buster-lite.img [megabytes]
-   ```
+4. Run scripts.
+
+## Available scripts
+
+```
+sudo ./prepare.sh 2020-02-13-raspbian-buster-lite.img [mount point]
+sudo ./chroot.sh 2020-02-13-raspbian-buster-lite.img [mount point]
+sudo ./grow.sh 2020-02-13-raspbian-buster-lite.img [megabytes]
+```
 
 The default `setup.sh` script **will fail** unless you `grow` the standard `.img` first *(for 2020-02-13)*.
 
