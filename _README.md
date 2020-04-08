@@ -7,7 +7,7 @@
    ```
 2. Download gist files:
    ```bash
-   wget https://gist.githubusercontent.com/cinderblock/20952a653989e55f8a7770a0ca2348a8/raw/{prepare,chroot,grow,setup}.sh
+   wget https://gist.githubusercontent.com/cinderblock/20952a653989e55f8a7770a0ca2348a8/raw/{prepare,chroot,grow,setup}.sh --continue --quiet
    chmod +x {prepare,chroot,grow}.sh
    ```
 3. Edit `setup.sh` as desired.
@@ -20,13 +20,13 @@
    
 ## Prepare
 
-Runs the `setup.sh` script in a chroot in specified image
+Runs the `setup.sh` script in a chroot in specified image.
 
 ## Chroot
 
 Gives you a chroot in the image to change whatever manually.
 
-*Note: Bash history will be saved too. Subject to change.*
+Note: Bash history will be saved too. *Subject to change.*
 
 ## Grow
 
