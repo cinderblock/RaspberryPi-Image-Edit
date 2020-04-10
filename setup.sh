@@ -11,11 +11,14 @@ echo en_US.UTF-8 UTF-8 > /etc/locale.gen
 locale-gen
 update-locale LANG=en_US.UTF-8
 
+sudo -u pi bash << EOF_PI
 # Initialize Authorized Keys
 mkdir -p /home/pi/.ssh
-chown pi: /home/pi/.ssh
 curl -q https://github.com/cinderblock.keys > /home/pi/.ssh/authorized_keys
-chown pi: /home/pi/.ssh/authorized_keys
+
+# Run other things as `pi` user
+
+EOF_PI
 
 # Enable SSHD, without passwords
 systemctl enable ssh

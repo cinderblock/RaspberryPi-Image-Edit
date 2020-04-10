@@ -37,6 +37,6 @@ Note: Bash history will be saved too. *Subject to change.*
 
 Grow the image (and main partition) by some number of megabytes.
 
-This only affects the local img file. On first boot, Raspbian will automatically grow the parition to fill the full card.
+This only affects the local `.img` file. On first boot, Raspbian will automatically grow the parition to fill the full card.
 
 *Adding 100MB adds aproximately 10 seconds to the write time when transfering to an SD card.*
