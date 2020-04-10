@@ -10,7 +10,7 @@
    wget https://gist.githubusercontent.com/cinderblock/20952a653989e55f8a7770a0ca2348a8/raw/{prepare,chroot,grow,setup}.sh --timestamping --quiet
    chmod +x {prepare,chroot,grow}.sh
    ```
-3. Edit `setup.sh` as desired.
+3. Edit `setup.sh` as desired. *default adds **my** keys!*
 4. Run scripts.
 
 ## Available scripts

@@ -12,6 +12,8 @@ locale-gen
 update-locale LANG=en_US.UTF-8
 
 sudo -u pi bash <<EOF_PI
+set -e
+
 # Initialize Authorized Keys
 mkdir -p /home/pi/.ssh
 curl -q https://github.com/cinderblock.keys > /home/pi/.ssh/authorized_keys
