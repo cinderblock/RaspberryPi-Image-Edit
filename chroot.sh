@@ -19,12 +19,16 @@ if [[ ! -z "${QEMU}" ]]; then
   [ -x ${QEMU} ] || apt-get install qemu qemu-user-static binfmt-support
 fi
 
+trap 'echo Cleaning up...; cleanup' EXIT
+
 # Set IMG variable
 IMG=$1
 
 # Link a loopback device to the img file and get which one was used
 LOOP=$(losetup -Pf ${IMG} --show)
-# UNDO: losetup -d ${LOOP}
+function cleanup {
+  losetup -d ${LOOP}
+}
 
 MNT=${2:-/tmp/mount${LOOP}}
 
@@ -32,37 +36,46 @@ MNT=${2:-/tmp/mount${LOOP}}
 mkdir -p ${MNT}
 mount ${LOOP}p2 ${MNT}
 mount ${LOOP}p1 ${MNT}/boot
-# UNDO: umount ${MNT}{/boot,}
+function cleanup {
+  umount ${MNT}{/boot,}
+  # rmdir -p ${MNT}
+  losetup -d ${LOOP}
+}
 
 # Setup mounts needed for proper chroot
-mount --bind {,${MNT}}/etc/resolv.conf
+mount -o bind,ro {,${MNT}}/etc/resolv.conf
 mount --bind {,${MNT}}/dev
 mount --bind {,${MNT}}/dev/pts
 mount --bind {,${MNT}}/sys
 mount --bind {,${MNT}}/proc
-# UNDO: umount ${MNT}/{etc/resolv.conf,dev{/pts,},sys,proc}
+function cleanup {
+  umount ${MNT}{/{boot,etc/resolv.conf,dev{/pts,},sys,proc},}
+  # rmdir -p ${MNT}
+  losetup -d ${LOOP}
+}
 
 if [[ ! -z "${QEMU}" ]]; then
   # Make QEMU binary available in chroot
   cp {,${MNT}}${QEMU}
-  # UNDO: rm ${MNT}${QEMU}
+  function cleanup {
+    rm ${MNT}${QEMU}
+    umount ${MNT}{/{boot,etc/resolv.conf,dev{/pts,},sys,proc},}
+    # rmdir -p ${MNT}
+    losetup -d ${LOOP}
+  }
 fi
 
 # Prepare ld.preload for chroot
 sed -i 's/^/#CHROOT /g' ${MNT}/etc/ld.so.preload
-# UNDO: sed -i 's/^#CHROOT //g' ${MNT}/etc/ld.so.preload
+function cleanup {
+  sed -i 's/^#CHROOT //g' ${MNT}/etc/ld.so.preload
+  [[ ! -z "${QEMU}" ]] && rm ${MNT}${QEMU}
+  umount ${MNT}{/{boot,etc/resolv.conf,dev{/pts,},sys,proc},}
+  # rmdir -p ${MNT}
+  losetup -d ${LOOP}
+}
 
 echo Chrooting...
 
 # Run the script in Chroot
-chroot ${MNT} /bin/bash || :
-
-echo Cleaning up...
-
-# Full reset
-if [[ ! -z "${QEMU}" ]]; then
-  rm ${MNT}${QEMU}
-fi
-sed -i 's/^#CHROOT //g' ${MNT}/etc/ld.so.preload
-umount ${MNT}{/{boot,etc/resolv.conf,dev{/pts,},sys,proc},}
-losetup -d ${LOOP}
+chroot ${MNT} /bin/bash

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 IMG=$1
 
 # Default to 100MB
@@ -34,11 +36,18 @@ EOF
 
 # Setup loop device for image
 LOOP=$(losetup -Pf ${IMG} --show)
+
+trap 'echo Cleaning up...; cleanup' EXIT
+
+function cleanup {
+  losetup -d ${LOOP}
+}
+
 # Check fs because we can
 e2fsck -f ${LOOP}p2
+
 # Grow the ext partition
 resize2fs ${LOOP}p2
+
 # Check fs again because we can
 e2fsck -f ${LOOP}p2
-# Cleanup loop device
-losetup -d ${LOOP}
