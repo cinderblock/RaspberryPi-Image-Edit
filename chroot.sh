@@ -35,11 +35,12 @@ mount ${LOOP}p1 ${MNT}/boot
 # UNDO: umount ${MNT}{/boot,}
 
 # Setup mounts needed for proper chroot
+mount --bind {,${MNT}}/etc/resolv.conf
 mount --bind {,${MNT}}/dev
+mount --bind {,${MNT}}/dev/pts
 mount --bind {,${MNT}}/sys
 mount --bind {,${MNT}}/proc
-mount --bind {,${MNT}}/dev/pts
-# UNDO: umount ${MNT}/{dev{/pts,},sys,proc}
+# UNDO: umount ${MNT}/{etc/resolv.conf,dev{/pts,},sys,proc}
 
 if [[ ! -z "${QEMU}" ]]; then
   # Make QEMU binary available in chroot
@@ -63,5 +64,5 @@ if [[ ! -z "${QEMU}" ]]; then
   rm ${MNT}${QEMU}
 fi
 sed -i 's/^#CHROOT //g' ${MNT}/etc/ld.so.preload
-umount ${MNT}{/{boot,dev{/pts,},sys,proc},}
+umount ${MNT}{/{boot,etc/resolv.conf,dev{/pts,},sys,proc},}
 losetup -d ${LOOP}
