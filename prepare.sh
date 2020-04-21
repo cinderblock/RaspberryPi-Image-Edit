@@ -5,7 +5,8 @@ SETUP=${2:-setup.sh}
 set -e
 
 if [[ "$(dpkg --print-architecture)" != "armhf" ]]; then
-  [ -x /usr/bin/qemu-arm-static ] || apt-get install qemu qemu-user-static binfmt-support
+  QEMU=/usr/bin/qemu-arm-static
+  [ -x ${QEMU} ] || apt-get install qemu qemu-user-static binfmt-support
 fi
 
 trap 'echo Cleaning up...; cleanup' EXIT
@@ -43,21 +44,33 @@ function cleanup {
   losetup -d ${LOOP}
 }
 
+if [[ ! -z "${QEMU}" ]]; then
+  # Make QEMU binary available in chroot
+  cp {,${MNT}}${QEMU}
+  function cleanup {
+    rm ${MNT}${QEMU}
+    umount ${MNT}{/{boot,etc/resolv.conf,dev{/pts,},sys,proc},}
+    # rmdir -p ${MNT}
+    losetup -d ${LOOP}
+  }
+fi
+
 # Prepare ld.preload for chroot
 sed -i 's/^/#CHROOT /g' ${MNT}/etc/ld.so.preload
 function cleanup {
   sed -i 's/^#CHROOT //g' ${MNT}/etc/ld.so.preload
+  [[ ! -z "${QEMU}" ]] && rm ${MNT}${QEMU}
   umount ${MNT}{/{boot,etc/resolv.conf,dev{/pts,},sys,proc},}
   # rmdir -p ${MNT}
   losetup -d ${LOOP}
 }
-
 # Copy setup script to image
 cp ${SETUP} ${MNT}/setup.sh
 chmod +x ${MNT}/setup.sh
 function cleanup {
   rm ${MNT}/setup.sh
   sed -i 's/^#CHROOT //g' ${MNT}/etc/ld.so.preload
+  [[ ! -z "${QEMU}" ]] && rm ${MNT}${QEMU}
   umount ${MNT}{/{boot,etc/resolv.conf,dev{/pts,},sys,proc},}
   # rmdir -p ${MNT}
   losetup -d ${LOOP}
