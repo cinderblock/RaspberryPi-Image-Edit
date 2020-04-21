@@ -54,33 +54,21 @@ function cleanup {
   losetup -d ${LOOP}
 }
 
-if [[ ! -z "${QEMU}" ]]; then
-  # Make QEMU binary available in chroot
-  cp {,${MNT}}${QEMU}
-  function cleanup {
-    rm ${MNT}${QEMU}
-    umount ${MNT}{/{boot,etc/resolv.conf,dev{/pts,},sys,proc},}
-    # rmdir -p ${MNT}
-    losetup -d ${LOOP}
-  }
-fi
-
 # Prepare ld.preload for chroot
 sed -i 's/^/#CHROOT /g' ${MNT}/etc/ld.so.preload
 function cleanup {
   sed -i 's/^#CHROOT //g' ${MNT}/etc/ld.so.preload
-  [[ ! -z "${QEMU}" ]] && rm ${MNT}${QEMU}
   umount ${MNT}{/{boot,etc/resolv.conf,dev{/pts,},sys,proc},}
   # rmdir -p ${MNT}
   losetup -d ${LOOP}
 }
+
 # Copy setup script to image
 cp {,${MNT}/}setup.sh
 chmod +x ${MNT}/setup.sh
 function cleanup {
   rm ${MNT}/setup.sh
   sed -i 's/^#CHROOT //g' ${MNT}/etc/ld.so.preload
-  [[ ! -z "${QEMU}" ]] && rm ${MNT}${QEMU}
   umount ${MNT}{/{boot,etc/resolv.conf,dev{/pts,},sys,proc},}
   # rmdir -p ${MNT}
   losetup -d ${LOOP}
