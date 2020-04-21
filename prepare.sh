@@ -2,26 +2,12 @@
 
 set -e
 
-# Needed later
-QEMU=/usr/bin/qemu-arm-static
-
-ARCH=$(dpkg --print-architecture)
-
-if [[ "${ARCH}" == "armhf" ]]; then
-  QEMU=
-fi
-
-if [[ "${ARCH}" == "arm64" ]]; then
-  QEMU=
-fi
-
-if [[ ! -z "${QEMU}" ]]; then
-  [ -x ${QEMU} ] || apt-get install qemu qemu-user-static binfmt-support
+if [[ "$(dpkg --print-architecture)" != "armhf" ]]; then
+  [ -x /usr/bin/qemu-arm-static ] || apt-get install qemu qemu-user-static binfmt-support
 fi
 
 trap 'echo Cleaning up...; cleanup' EXIT
 
-# Set IMG variable
 IMG=$1
 
 # Link a loopback device to the img file and get which one was used
@@ -30,6 +16,7 @@ function cleanup {
   losetup -d ${LOOP}
 }
 
+# Allow using second argument to override mount point
 MNT=${2:-/tmp/mount${LOOP}}
 
 # Create the mount point and mount the image
