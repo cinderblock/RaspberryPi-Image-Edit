@@ -42,3 +42,10 @@ Grow the image (and main partition) by some number of megabytes.
 This only affects the local `.img` file. On first boot, Raspbian will automatically grow the parition to fill the full card.
 
 *Adding 100MB adds aproximately 10 seconds to the write time when transfering to an SD card.*
+
+# See also
+
+- https://github.com/RPi-Distro/pi-gen - Full featured `.img` generator
+- https://gist.github.com/htruong/0271d84ae81ee1d301293d126a5ad716 - Instructions to grow and chroot
+- https://gist.github.com/htruong/7df502fb60268eeee5bca21ef3e436eb - Script to just mount & chroot (no loopback)
+- https://gist.github.com/kmdouglass/38e1383c7e62745f3cf522702c21cb49 - Script: loopback, mount, chroot. No cleanup.
