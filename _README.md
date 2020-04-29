@@ -31,6 +31,8 @@ Runs the `setup.sh` (or other) script in a chroot in specified image.
 
 Gives you a chroot in the image to change whatever manually.
 
+Planned changed: Use `systemd-nspawn` instead of `chroot`.
+
 Note: Bash history will be saved too. *Subject to change.*
 
 ## Grow
