@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SETUP=${2:-setup.sh}
+
 set -e
 
 if [[ "$(dpkg --print-architecture)" != "armhf" ]]; then
@@ -17,7 +19,7 @@ function cleanup {
 }
 
 # Allow using second argument to override mount point
-MNT=${2:-/tmp/mount${LOOP}}
+MNT=${3:-/tmp/mount${LOOP}}
 
 # Create the mount point and mount the image
 mkdir -p ${MNT}
@@ -51,7 +53,7 @@ function cleanup {
 }
 
 # Copy setup script to image
-cp {,${MNT}/}setup.sh
+cp ${SETUP} ${MNT}/setup.sh
 chmod +x ${MNT}/setup.sh
 function cleanup {
   rm ${MNT}/setup.sh

@@ -16,7 +16,7 @@
 ## Available scripts
 
 ```
-sudo ./prepare.sh 2020-02-13-raspbian-buster-lite.img [mount point]
+sudo ./prepare.sh 2020-02-13-raspbian-buster-lite.img [setup.sh] [mount point]
 sudo ./chroot.sh 2020-02-13-raspbian-buster-lite.img [mount point]
 sudo ./grow.sh 2020-02-13-raspbian-buster-lite.img [megabytes]
 ```
@@ -25,7 +25,7 @@ The default `setup.sh` script **will fail** unless you `grow` the standard `.img
 
 ## Prepare
 
-Runs the `setup.sh` script in a chroot in specified image.
+Runs the `setup.sh` (or other) script in a chroot in specified image.
 
 ## Chroot
 
