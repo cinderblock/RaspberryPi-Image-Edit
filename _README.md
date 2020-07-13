@@ -1,9 +1,9 @@
 # Usage
 
-1. Download a Raspbian image and unzip it: 
+1. Download a Raspberry Pi OS image and unzip it: 
    ```bash
-   wget https://downloads.raspberrypi.org/raspbian_lite_latest --trust-server-names --timestamping --quiet
-   unzip 2020-02-13-raspbian-buster-lite.zip
+   wget https://downloads.raspberrypi.org/raspios_lite_armhf_latest --trust-server-names --timestamping --quiet
+   unzip 2020-05-27-raspios-buster-lite-armhf.zip
    ```
 2. Download gist files:
    ```bash
@@ -16,9 +16,9 @@
 ## Available scripts
 
 ```
-sudo ./prepare.sh 2020-02-13-raspbian-buster-lite.img [setup.sh] [mount point]
-sudo ./chroot.sh 2020-02-13-raspbian-buster-lite.img [mount point]
-sudo ./grow.sh 2020-02-13-raspbian-buster-lite.img [megabytes]
+sudo ./prepare.sh 2020-05-27-raspios-buster-lite-armhf.img [setup.sh] [mount point]
+sudo ./chroot.sh 2020-05-27-raspios-buster-lite-armhf.img [mount point]
+sudo ./grow.sh 2020-05-27-raspios-buster-lite-armhf.img [megabytes]
 ```
 
 The default `setup.sh` script **will fail** unless you `grow` the standard `.img` first *(for 2020-02-13)*.

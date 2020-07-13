@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This is meant to be run on Raspbian to setup the system the way you want.
+# This is meant to be run on Raspberry Pi OS to setup the system the way you want.
 # No variables to change. Just change what you want to change.
 # For instance, the default gives *me* access to your system!
 
