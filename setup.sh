@@ -85,6 +85,7 @@ Wants=network-pre.target
 
 [Service]
 Type=oneshot
+RemainAfterExit=yes
 # Print current hostname for logs
 ExecStart=/usr/bin/hostname
 # Copy hostname file
