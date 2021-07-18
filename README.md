@@ -1,4 +1,6 @@
-# Usage
+# Setup Raspberry Pi OS Image Script
+
+Scripts for modifying Raspberry Pi OS images **before** writing to SD card.
 
 ## Easy Mode
 
@@ -37,7 +39,7 @@ The default `setup.sh` script **will fail** unless you `grow` the standard `.img
 
 Runs the `setup.sh` (or other) script in a chroot in specified image.
 
-## Chroot
+### Chroot
 
 Gives you a chroot in the image to change whatever manually.
 
@@ -58,7 +60,7 @@ The `./chroot.sh` script can also be run in "prepare" mode.
 Give it a second argument of an executable to run inside the chrooted environment as root.
 For example: `./chroot.sh my-raspios.img some-executable`.
 
-## Grow
+### Grow
 
 Grow the image (and main partition) by some number of megabytes.
 
@@ -70,7 +72,7 @@ This only affects the local `.img` file. On first boot, Raspbian will automatica
 
 *Adding 100MB adds aproximately 10 seconds to the write time when transfering to an SD card.*
 
-## New
+### New
 
 Does all the steps needed to get a brand new image in a single command.
 Assumes other scripts are in the same folder.
@@ -88,13 +90,13 @@ The steps are:
 5. Runs `setup.sh` inside the `chroot`
 6. Zips the img to save space
 
-## Setup
+### Setup
 
 This script is meant to be run inside a raspberry pi chroot, as root.
 
 It might run succesfully running directly on a Pi, but that is not a supported use case.
 
-### Current Features
+#### Current Features
 
 - Adds ssh keys
 - Enables sshd, without passwords
@@ -108,7 +110,7 @@ It might run succesfully running directly on a Pi, but that is not a supported u
 - Sets `python3` as the default Python version
 - Sets `vim` as the default editor
 
-# See also
+## See also
 
 - https://github.com/RPi-Distro/pi-gen - Full featured `.img` generator
 - https://gist.github.com/htruong/0271d84ae81ee1d301293d126a5ad716 - Instructions to grow and chroot
