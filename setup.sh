@@ -106,6 +106,49 @@ WantedBy=multi-user.target
 EOF_HOSTNAME
 touch /boot/hostname
 
+# Boot README
+debug "Adding README to /boot"
+cat << 'EOF_README' > /boot/README.md
+# Raspberry Pi /boot directory
+
+Control boot options of Raspberry Pi.
+
+See: https://www.raspberrypi.org/documentation/configuration/boot_folder.md
+
+## Hostname (not official)
+
+Create a file `hostname` with a single line that is the new hostname to use on boot.
+
+## WPA Supplicant
+
+Create a file `wpa_supplicant.conf` to update the WiFi configuration on boot.
+
+Example:
+
+```conf
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=US
+
+network={
+  ssid="My SSID"
+  psk="My PSK"
+}
+```
+
+## `cmdline.txt`
+
+Kernel boot options.
+
+See: https://www.raspberrypi.org/documentation/configuration/cmdline-txt.md
+
+## `config.txt`
+
+Hardware boot configuration.
+
+See: https://www.raspberrypi.org/documentation/configuration/config-txt/README.md
+EOF_README
+
 # Set Timezone
 TIMEZONE=America/Los_Angeles
 debug "Setting Timezone to: ${TIMEZONE}"
