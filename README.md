@@ -5,8 +5,8 @@ Scripts for modifying Raspberry Pi OS images **before** writing to SD card.
 ## Easy Mode
 
 ```bash
-wget https://gist.githubusercontent.com/cinderblock/20952a653989e55f8a7770a0ca2348a8/raw/{setup,chroot,grow,new}.sh --timestamping --quiet
-chmod +x {setup,chroot,grow,new}.sh
+git clone https://github.com/cinderblock/RaspberryPi-Image-Generator.git
+cd RaspberryPi-Image-Generator
 # Edit `setup.sh`. This gist adds *my* keys!
 ./new.sh
 ```
@@ -20,7 +20,7 @@ chmod +x {setup,chroot,grow,new}.sh
    ```
 2. Download gist files:
    ```bash
-   wget https://gist.githubusercontent.com/cinderblock/20952a653989e55f8a7770a0ca2348a8/raw/{setup,chroot,grow,new}.sh --timestamping --quiet
+   wget https://raw.githubusercontent.com/cinderblock/RaspberryPi-Image-Generator/master/{setup,chroot,grow,new}.sh --timestamping --quiet
    chmod +x {setup,chroot,grow,new}.sh
    ```
 3. Edit `setup.sh` as desired. *default adds **my** keys!*
