@@ -12,3 +12,5 @@ Scripts for modifying Raspberry Pi OS images **before** writing to SD card.
   - sshd
   - programs
 - Grow `img`
+- Boot Features
+  - Set hostname with `/boot/hostname` file
