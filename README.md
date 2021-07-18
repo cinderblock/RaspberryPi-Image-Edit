@@ -33,6 +33,7 @@ sudo ./chroot.sh 2020-05-27-raspios-buster-lite-armhf.img [executable] [mount po
 sudo ./grow.sh 2020-05-27-raspios-buster-lite-armhf.img [megabytes]
 ./new.sh [image-path]
 # `setup.sh` is meant to be run on a Raspberry Pi image in a chroot.
+sudo ./edit-boot.sh 2020-05-27-raspios-buster-lite-armhf.img
 ```
 
 The default `setup.sh` script **will fail** unless you `grow` the standard `.img` by ~400MB first *(as of 2021-07-15)*.
@@ -109,6 +110,10 @@ It might run succesfully running directly on a Pi, but that is not a supported u
 - Sets the passwd for `pi`
 - Sets `python3` as the default Python version
 - Sets `vim` as the default editor
+
+### Edit Boot
+
+A simplified mounting of the filesystem that only accesses the image's `/boot` parition.
 
 ## See also
 
