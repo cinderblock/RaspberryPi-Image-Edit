@@ -39,7 +39,7 @@ sudo ./grow.sh ${IMG} 400
 debug "Preparing image"
 
 # Run setup script
-time sudo LEAVE_HISTORY_ALONE=yes ./chroot.sh ${IMG} setup.sh
+sudo LEAVE_HISTORY_ALONE=yes ./chroot.sh ${IMG} setup.sh
 
 # Chroot for fun
 #sudo LEAVE_HISTORY_ALONE=yes ./chroot.sh ${IMG}
