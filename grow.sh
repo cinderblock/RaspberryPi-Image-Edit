@@ -22,13 +22,13 @@ debug "Growing image ${IMG} by ${MEGA}MB"
 debug "Creating dummy partition"
 
 # Create a dummy partition to help defaults later
-fdisk ${IMG} <<EOF > /dev/null
-n
+fdisk ${IMG} <<- EOF > /dev/null
+	n
 
 
 
 
-w
+	w
 EOF
 
 debug "Growing the real file"
@@ -39,17 +39,17 @@ truncate -s +${MEGA}M ${IMG}
 debug "Extending partition"
 
 # Grow by deleting existing partition and creating a new one in the same place, but bigger.
-fdisk ${IMG} <<EOF > /dev/null 2> /dev/null
-d
-2
-n
-p
+fdisk ${IMG} <<- EOF > /dev/null 2> /dev/null
+	d
+	2
+	n
+	p
 
 
 
-d
+	d
 
-w
+	w
 EOF
 
 # Setup loop device for image

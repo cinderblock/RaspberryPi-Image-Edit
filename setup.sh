@@ -50,10 +50,10 @@ echo "pi:password" | chpasswd
 
 # Add SSH keys
 debug "Keys..."
-sudo -u pi bash -e <<EOF_PI
-mkdir -p ~/.ssh
-curl -sL https://github.com/cinderblock.keys > ~/.ssh/authorized_keys
-echo "sudo raspi-config" > ~/.bash_history
+sudo -u pi bash -e <<- EOF_PI
+	mkdir -p ~/.ssh
+	curl -sL https://github.com/cinderblock.keys > ~/.ssh/authorized_keys
+	echo "sudo raspi-config" > ~/.bash_history
 EOF_PI
 
 # Enable SSHD, without passwords
@@ -63,90 +63,90 @@ echo PasswordAuthentication no >> /etc/ssh/sshd_config
 
 # Add WiFi config
 debug "WiFi Example..."
-cat << EOF_WPA > /boot/wpa_supplicant.conf
-ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-update_config=1
-country=US
+cat <<- EOF_WPA > /boot/wpa_supplicant.conf
+	ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+	update_config=1
+	country=US
 
-network={
-  ssid="My SSID"
-  psk="My PSK"
-}
+	network={
+		ssid="My SSID"
+		psk="My PSK"
+	}
 EOF_WPA
 
 # Hostname
 debug "Hostname setting system..."
-cat << 'EOF_HOSTNAME' > /etc/systemd/system/hostname-switch.service
-[Unit]
-Description=Change hostname by /boot file
-ConditionFileNotEmpty=/boot/hostname
-Before=network-pre.target
-Wants=network-pre.target
+cat <<- 'EOF_HOSTNAME' > /etc/systemd/system/hostname-switch.service
+	[Unit]
+	Description=Change hostname by /boot file
+	ConditionFileNotEmpty=/boot/hostname
+	Before=network-pre.target
+	Wants=network-pre.target
 
-[Service]
-Type=oneshot
-RemainAfterExit=yes
-# Print current hostname for logs
-ExecStart=/usr/bin/hostname
-# Copy hostname file
-ExecStart=/bin/cp /boot/hostname /etc/hostname
-# Ensure file ends with a newline
-ExecStart=/usr/bin/sed -i -e $$a\\ /etc/hostname
-# Set hostname from file
-ExecStart=/usr/bin/hostname -F /etc/hostname
-# Remove default hostname from /etc/hosts
-ExecStart=/usr/bin/sed -i.orig -E /^127.0.1.1\\s+raspberrypi\\s*$$/d /etc/hosts
-# Add new hostname to /etc/hosts
-ExecStart=/bin/sh -c 'echo 127.0.1.1\\t$(hostname) >> /etc/hosts'
-# Reset hostname file in /boot
-ExecStart=/usr/bin/truncate -s 0 /boot/hostname
+	[Service]
+	Type=oneshot
+	RemainAfterExit=yes
+	# Print current hostname for logs
+	ExecStart=/usr/bin/hostname
+	# Copy hostname file
+	ExecStart=/bin/cp /boot/hostname /etc/hostname
+	# Ensure file ends with a newline
+	ExecStart=/usr/bin/sed -i -e $$a\\ /etc/hostname
+	# Set hostname from file
+	ExecStart=/usr/bin/hostname -F /etc/hostname
+	# Remove default hostname from /etc/hosts
+	ExecStart=/usr/bin/sed -i.orig -E /^127.0.1.1\\s+raspberrypi\\s*$$/d /etc/hosts
+	# Add new hostname to /etc/hosts
+	ExecStart=/bin/sh -c 'echo 127.0.1.1\\t$(hostname) >> /etc/hosts'
+	# Reset hostname file in /boot
+	ExecStart=/usr/bin/truncate -s 0 /boot/hostname
 
-[Install]
-WantedBy=multi-user.target
+	[Install]
+	WantedBy=multi-user.target
 EOF_HOSTNAME
 touch /boot/hostname
 
 # Boot README
 debug "Adding README to /boot"
-cat << 'EOF_README' > /boot/README.md
-# Raspberry Pi /boot directory
+cat <<- 'EOF_README' > /boot/README.md
+	# Raspberry Pi /boot directory
 
-Control boot options of Raspberry Pi.
+	Control boot options of Raspberry Pi.
 
-See: https://www.raspberrypi.org/documentation/configuration/boot_folder.md
+	See: https://www.raspberrypi.org/documentation/configuration/boot_folder.md
 
-## Hostname (not official)
+	## Hostname (not official)
 
-Create a file `hostname` with a single line that is the new hostname to use on boot.
+	Create a file `hostname` with a single line that is the new hostname to use on boot.
 
-## WPA Supplicant
+	## WPA Supplicant
 
-Create a file `wpa_supplicant.conf` to update the WiFi configuration on boot.
+	Create a file `wpa_supplicant.conf` to update the WiFi configuration on boot.
 
-Example:
+	Example:
 
-```conf
-ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-update_config=1
-country=US
+	```conf
+	ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+	update_config=1
+	country=US
 
-network={
-  ssid="My SSID"
-  psk="My PSK"
-}
-```
+	network={
+		ssid="My SSID"
+		psk="My PSK"
+	}
+	```
 
-## `cmdline.txt`
+	## `cmdline.txt`
 
-Kernel boot options.
+	Kernel boot options.
 
-See: https://www.raspberrypi.org/documentation/configuration/cmdline-txt.md
+	See: https://www.raspberrypi.org/documentation/configuration/cmdline-txt.md
 
-## `config.txt`
+	## `config.txt`
 
-Hardware boot configuration.
+	Hardware boot configuration.
 
-See: https://www.raspberrypi.org/documentation/configuration/config-txt/README.md
+	See: https://www.raspberrypi.org/documentation/configuration/config-txt/README.md
 EOF_README
 
 # Set Timezone
@@ -161,9 +161,9 @@ debug "Add Node.js Sources..."
 #curl -sL https://deb.nodesource.com/setup_lts.x | bash -
 curl -sL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor > /usr/share/keyrings/nodesource.gpg
 NODE_VERSION=$(curl -sL https://deb.nodesource.com/setup_lts.x --retry 1 | grep NODEREPO= | sed -E 's/^NODEREPO="([^"]+)"$/\1/g')
-cat << EOF_NODE > /etc/apt/sources.list.d/nodesource.list
-deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/${NODE_VERSION} buster main
-deb-src [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/${NODE_VERSION} buster main
+cat <<- EOF_NODE > /etc/apt/sources.list.d/nodesource.list
+	deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/${NODE_VERSION} buster main
+	deb-src [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/${NODE_VERSION} buster main
 EOF_NODE
 
 # Update
