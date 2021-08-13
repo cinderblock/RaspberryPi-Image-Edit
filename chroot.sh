@@ -125,7 +125,7 @@ if [[ ! -z "${DEBUG_CHROOT}" ]]; then
 
 	chroot ${MNT} ${QEMU} /bin/ls > /dev/null || echo "Your chroot is likely wrongly set up"
 
-	chroot ${MNT} /bin/ls > /dev/null || echo "Your binfmt-misc registration is broken. Check contents of /proc/sys/fs/binfmt_misc"
+	chroot ${MNT} /bin/ls > /dev/null || echo "Your binfmt-misc registration is broken. Check contents of /proc/sys/fs/binfmt_misc. Maybe run `sudo update-binfmts --enable`."
 fi
 
 if [[ ! -z "${EXEC}" ]]; then
