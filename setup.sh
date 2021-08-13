@@ -105,6 +105,7 @@ cat <<- 'EOF_HOSTNAME' > /etc/systemd/system/hostname-switch.service
 	WantedBy=multi-user.target
 EOF_HOSTNAME
 touch /boot/hostname
+systemctl enable hostname-switch.service
 
 # Boot README
 debug "Adding README to /boot"
