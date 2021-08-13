@@ -19,7 +19,7 @@ IMG=raspios-lite-$(date --iso-8601=seconds | sed -e 's/-[^-]*$//')-cameron.img
 if [[ "$1__" == *.zip__ ]]; then
     ZIP=$1
     debug "Using existing zip as base: ${ZIP}"
-    
+
     IMG=${2:-$IMG}
 
     debug "Extracting to: ${IMG}"

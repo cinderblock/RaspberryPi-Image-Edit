@@ -13,7 +13,7 @@ cd RaspberryPi-Image-Generator
 
 ## Manual Mode
 
-1. Download a Raspberry Pi OS image and unzip it: 
+1. Download a Raspberry Pi OS image and unzip it:
    ```bash
    wget https://downloads.raspberrypi.org/raspios_lite_armhf_latest --trust-server-names --timestamping --quiet
    unzip *-*-*-raspios-buster-lite-armhf.zip
