@@ -7,7 +7,7 @@ IMG=$1
 # Link a loopback device to the img file and get which one was used
 LOOP=$(losetup -Pf ${IMG} --show)
 function cleanup {
-  losetup -d ${LOOP}
+	losetup -d ${LOOP}
 }
 
 trap cleanup EXIT
@@ -19,9 +19,9 @@ MNT=${2:-/tmp/mount${LOOP}}
 mkdir -p ${MNT}
 mount ${LOOP}p1 ${MNT}
 function cleanup {
-  umount ${MNT}
-  # rmdir -p ${MNT}
-  losetup -d ${LOOP}
+	umount ${MNT}
+	# rmdir -p ${MNT}
+	losetup -d ${LOOP}
 }
 
 # Edit files

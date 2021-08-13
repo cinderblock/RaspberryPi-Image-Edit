@@ -8,7 +8,7 @@ YELLOW='\033[0;33m'
 NC='\033[0m' # No Color
 
 function debug {
-  echo -e "${YELLOW}NEW${NC}" "$@"
+	echo -e "${YELLOW}NEW${NC}" "$@"
 }
 
 # Make sure we can sudo now. If `curl` finishes in 15min we should be good and it won't ask again
@@ -17,18 +17,18 @@ sudo -v
 IMG=raspios-lite-$(date --iso-8601=seconds | sed -e 's/-[^-]*$//')-cameron.img
 
 if [[ "$1__" == *.zip__ ]]; then
-    ZIP=$1
-    debug "Using existing zip as base: ${ZIP}"
+	ZIP=$1
+	debug "Using existing zip as base: ${ZIP}"
 
-    IMG=${2:-$IMG}
+	IMG=${2:-$IMG}
 
-    debug "Extracting to: ${IMG}"
-    zcat ${ZIP} > ${IMG}
+	debug "Extracting to: ${IMG}"
+	zcat ${ZIP} > ${IMG}
 else
-    IMG=${1:-$IMG}
-    debug "Downloading to: ${IMG}"
-    # They always provide exactly one file, the `.img` we care about.
-    curl -L https://downloads.raspberrypi.org/raspios_lite_armhf_latest | zcat > ${IMG}
+	IMG=${1:-$IMG}
+	debug "Downloading to: ${IMG}"
+	# They always provide exactly one file, the `.img` we care about.
+	curl -L https://downloads.raspberrypi.org/raspios_lite_armhf_latest | zcat > ${IMG}
 fi
 
 debug "Growing image"

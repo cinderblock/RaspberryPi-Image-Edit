@@ -9,8 +9,8 @@ YELLOW='\033[0;33m'
 NC='\033[0m' # No Color
 
 function debug {
-  echo -e "${GREEN}CHROOT${NC}" "$@"
-  :
+	echo -e "${GREEN}CHROOT${NC}" "$@"
+	:
 }
 
 if [[ "$(dpkg --print-architecture)" != "armhf" ]]; then

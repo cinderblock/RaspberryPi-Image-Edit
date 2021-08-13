@@ -13,8 +13,8 @@ YELLOW='\033[0;33m'
 NC='\033[0m' # No Color
 
 function debug {
-  echo -e "${GREEN}GROW${NC}" "$@"
-  :
+	echo -e "${GREEN}GROW${NC}" "$@"
+	:
 }
 
 debug "Growing image ${IMG} by ${MEGA}MB"
@@ -58,8 +58,8 @@ LOOP=$(losetup -Pf ${IMG} --show)
 trap cleanup EXIT
 
 function cleanup {
-  debug "Cleaning up..."
-  losetup -d ${LOOP}
+	debug "Cleaning up..."
+	losetup -d ${LOOP}
 }
 
 debug "Checking filesystem"

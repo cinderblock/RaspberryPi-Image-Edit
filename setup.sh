@@ -15,13 +15,13 @@ NC='\033[0m' # No Color
 PREFIX="${GREEN}SETUP${NC}"
 
 function debug {
-  echo -e "${PREFIX}" "$@"
+	echo -e "${PREFIX}" "$@"
 }
 
 function error {
-  echo -e "${PREFIX}" "${RED}ERROR ABOVE${NC}"
-  echo -e "${PREFIX}" "Maybe we ran out of space??"
-  df -h /
+	echo -e "${PREFIX}" "${RED}ERROR ABOVE${NC}"
+	echo -e "${PREFIX}" "Maybe we ran out of space??"
+	df -h /
 }
 
 trap error ERR
