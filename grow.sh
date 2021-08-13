@@ -22,6 +22,7 @@ debug "Growing image ${IMG} by ${MEGA}MB"
 debug "Creating dummy partition"
 
 # Create a dummy partition to help defaults later
+# The empty lines are significant
 fdisk ${IMG} <<- EOF > /dev/null
 	n
 
@@ -39,6 +40,7 @@ truncate -s +${MEGA}M ${IMG}
 debug "Extending partition"
 
 # Grow by deleting existing partition and creating a new one in the same place, but bigger.
+# The empty lines are significant
 fdisk ${IMG} <<- EOF > /dev/null 2> /dev/null
 	d
 	2
