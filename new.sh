@@ -48,4 +48,4 @@ debug "Compressing image"
 
 #rm "${IMG}"
 #xz --force --keep --compress --stdout ${IMG} > temp.img.xz
-zip ${IMG}{.zip,}
+zip -m ${IMG}{.zip,}
