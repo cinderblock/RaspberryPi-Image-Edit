@@ -156,15 +156,56 @@ debug "Before: $(date)"
 ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
 debug "After : $(date)"
 
-# Add Node.js sources
-debug "Add Node.js Sources..."
-#curl -sL https://deb.nodesource.com/setup_lts.x | bash -
-curl -sL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor > /usr/share/keyrings/nodesource.gpg
-NODE_VERSION=$(curl -sL https://deb.nodesource.com/setup_lts.x --retry 1 | grep NODEREPO= | sed -E 's/^NODEREPO="([^"]+)"$/\1/g')
-cat <<- EOF_NODE > /etc/apt/sources.list.d/nodesource.list
-	deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/${NODE_VERSION} buster main
-	deb-src [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/${NODE_VERSION} buster main
-EOF_NODE
+# Make sure these are `true` or `false`
+
+INSTALL_NODE=true
+USE_LTS=true
+# For Pi Zero
+USE_UNOFFICIAL_ARM6=false
+# Use their long slow script?
+USE_NODESOURCE_INSTALL_SCRIPT=false
+
+if $INSTALL_NODE; then
+	# Add Node.js sources
+	debug "Add Node.js Sources..."
+
+	if $USE_UNOFFICIAL_ARM6; then
+		debug "Using unofficial Node.js builds..."
+
+		if $USE_LTS; then
+			DOWNLOAD_VERSION=$(curl -Ls https://unofficial-builds.nodejs.org/download/release/index.tab | tail -n+2 | awk '$10!="-"' - | head -n 1 | cut -f 1)
+		else
+			DOWNLOAD_VERSION=$(curl -Ls https://unofficial-builds.nodejs.org/download/release/index.tab | tail -n+2 | head -n1 | cut -f 1)
+		fi
+
+		DOWNLOAD_URL=https://unofficial-builds.nodejs.org/download/release/${DOWNLOAD_VERSION}/node-${DOWNLOAD_VERSION}-linux-armv6l.tar.xz
+
+		curl -L "${DOWNLOAD_URL}" | tar xJ -C /usr/local --strip-components=1
+	else
+		# TODO: Fully respect optional `NODE_VERSION` environment variable
+		if $USE_LTS; then
+			NODESOURCE_URL=https://deb.nodesource.com/setup_lts.x
+		else
+			NODESOURCE_URL=https://deb.nodesource.com/setup_current.x
+		fi
+
+		if $USE_NODESOURCE_INSTALL_SCRIPT; then
+			debug "Using official Nodesource installer script"
+			curl -sL ${NODESOURCE_URL} --retry 1 | bash -
+		else
+			debug "Manually adding Nodesource to apt"
+			if [[ -z "$NODE_VERSION" ]]; then
+				NODE_VERSION=$(curl -sL ${NODESOURCE_URL} --retry 1 | grep NODEREPO= | sed -E 's/^NODEREPO="([^"]+)"$/\1/g')
+			fi
+
+			curl -sL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor > /usr/share/keyrings/nodesource.gpg
+			cat <<- EOF_NODE > /etc/apt/sources.list.d/nodesource.list
+				deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/${NODE_VERSION} buster main
+				deb-src [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/${NODE_VERSION} buster main
+			EOF_NODE
+		fi
+	fi
+fi
 
 # Update
 debug "Update"
