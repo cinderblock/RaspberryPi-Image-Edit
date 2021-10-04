@@ -118,6 +118,7 @@ A simplified mounting of the filesystem that only accesses the image's `/boot` p
 ## See also
 
 - https://github.com/RPi-Distro/pi-gen - Full featured `.img` generator
+- https://wiki.debian.org/RaspberryPi/qemu-user-static - Debian instructions to grow/mount/chroot/qemu-run
 - https://gist.github.com/htruong/0271d84ae81ee1d301293d126a5ad716 - Instructions to grow and chroot
 - https://gist.github.com/htruong/7df502fb60268eeee5bca21ef3e436eb - Script to just mount & chroot (no loopback)
 - https://gist.github.com/kmdouglass/38e1383c7e62745f3cf522702c21cb49 - Script: loopback, mount, chroot. No cleanup.
