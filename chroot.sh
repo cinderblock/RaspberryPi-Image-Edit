@@ -117,15 +117,15 @@ if [[ ! -z "${DEBUG_CHROOT}" ]]; then
 
 	chroot ${MNT} ${QEMU} --help > /dev/null || "Your allegedly static QEMU isn't actually statically linked"
 
-	${MNT}${QEMU} ${MNT}/bin/ls > /dev/null && echo "Unnecessary usage of qemu?!" || :
+	${MNT}${QEMU} ${MNT}/bin/true && echo "Unnecessary usage of qemu?!" || :
 	# this *should* fail with "/lib/ld-linux.so.3: No such file or directory"
 	# or similar, indicating we read the executable but couldn't find
 	# the dynamic linker. If this fails then maybe your chroot doesn't
 	# have ARM binaries in it...
 
-	chroot ${MNT} ${QEMU} /bin/ls > /dev/null || echo "Your chroot is likely wrongly set up"
+	chroot ${MNT} ${QEMU} /bin/true || echo "Your chroot is likely wrongly set up"
 
-	chroot ${MNT} /bin/ls > /dev/null || echo "Your binfmt-misc registration is broken. Check contents of /proc/sys/fs/binfmt_misc. Maybe run `sudo update-binfmts --enable`."
+	chroot ${MNT} /bin/true || echo "Your binfmt-misc registration is broken. Check contents of /proc/sys/fs/binfmt_misc. Maybe run \`sudo update-binfmts --enable\`."
 fi
 
 if [[ ! -z "${EXEC}" ]]; then
