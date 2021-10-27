@@ -220,7 +220,7 @@ apt-get -qq upgrade -y --auto-remove
 
 # Install Essentials
 debug "Packages"
-apt-get -qq install -y --auto-remove vim screen git python3{,-pip} nodejs
+apt-get -qq install -y --auto-remove vim screen git python3{,-pip} $(${USE_UNOFFICIAL_ARM6} || ${INSTALL_NODE} && echo nodejs)
 
 debug "Set sensible defaults..."
 
