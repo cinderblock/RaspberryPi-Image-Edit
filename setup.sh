@@ -97,7 +97,7 @@ cat <<- 'EOF_HOSTNAME' > /etc/systemd/system/hostname-switch.service
 	# Remove default hostname from /etc/hosts
 	ExecStart=/usr/bin/sed -i.orig -E /^127.0.1.1\\s+raspberrypi\\s*$$/d /etc/hosts
 	# Add new hostname to /etc/hosts
-	ExecStart=/bin/sh -c 'echo 127.0.1.1\\t$(hostname) >> /etc/hosts'
+	ExecStart=/bin/sh -c 'echo 127.0.1.1\\\t$(hostname) >> /etc/hosts'
 	# Reset hostname file in /boot
 	ExecStart=/usr/bin/truncate -s 0 /boot/hostname
 
