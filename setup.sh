@@ -159,11 +159,12 @@ debug "After : $(date)"
 
 # Make sure these are `true` or `false`
 
+# For Pi Zero
 ARM6=true
 
 INSTALL_NODE=true
 USE_LTS=true
-# For Pi Zero
+
 USE_UNOFFICIAL_ARM6=${ARM6}
 # Use their long slow script?
 USE_NODESOURCE_INSTALL_SCRIPT=false
