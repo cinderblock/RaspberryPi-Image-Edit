@@ -1,8 +1,24 @@
 #!/bin/bash
 
 # This is meant to be run on Raspberry Pi OS to setup the system the way you want.
-# No variables to change. Just change what you want to change.
-# For instance, the default gives *me* access to your system!
+
+TIMEZONE=America/Los_Angeles
+# Make sure these are `true` or `false`
+
+# For Pi Zero
+ARM6=true
+
+INSTALL_NODE=true
+USE_LTS=true
+
+USE_UNOFFICIAL_ARM6=${ARM6}
+# Use their long slow script?
+USE_NODESOURCE_INSTALL_SCRIPT=false
+
+UPDATE_NPM=true
+
+
+### END OF VARIABLES
 
 set -e
 
@@ -151,25 +167,10 @@ cat <<- 'EOF_README' > /boot/README.md
 EOF_README
 
 # Set Timezone
-TIMEZONE=America/Los_Angeles
 debug "Setting Timezone to: ${TIMEZONE}"
 debug "Before: $(date)"
 ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
 debug "After : $(date)"
-
-# Make sure these are `true` or `false`
-
-# For Pi Zero
-ARM6=true
-
-INSTALL_NODE=true
-USE_LTS=true
-
-USE_UNOFFICIAL_ARM6=${ARM6}
-# Use their long slow script?
-USE_NODESOURCE_INSTALL_SCRIPT=false
-
-UPDATE_NPM=true
 
 if $INSTALL_NODE; then
 	# Add Node.js sources
