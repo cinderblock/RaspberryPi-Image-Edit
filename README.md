@@ -112,7 +112,7 @@ It might run succesfully running directly on a Pi, but that is not a supported u
 - Sets `python3` as the default Python version
 - Sets `vim` as the default editor
 
-### Edit Boot
+### Edit Boot `get-boot.sh`
 
 A simplified mounting of the filesystem that only accesses the image's `/boot` parition.
 
