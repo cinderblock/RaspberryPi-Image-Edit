@@ -8,14 +8,14 @@ TIMEZONE=America/Los_Angeles
 # For Pi Zero
 ARM6=true
 
-INSTALL_NODE=true
-USE_LTS=true
+NODE_INSTALL=true
+NODE_USE_LTS=true
 
-USE_UNOFFICIAL_ARM6=${ARM6}
+NODE_USE_UNOFFICIAL_ARM6=${ARM6}
 # Use their long slow script?
-USE_NODESOURCE_INSTALL_SCRIPT=false
+NODE_USE_NODESOURCE_INSTALL_SCRIPT=false
 
-UPDATE_NPM=true
+NODE_UPDATE_NPM=true
 
 
 ### END OF VARIABLES
@@ -172,14 +172,14 @@ debug "Before: $(date)"
 ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
 debug "After : $(date)"
 
-if $INSTALL_NODE; then
+if $NODE_INSTALL; then
 	# Add Node.js sources
 	debug "Add Node.js Sources..."
 
-	if $USE_UNOFFICIAL_ARM6; then
+	if $NODE_USE_UNOFFICIAL_ARM6; then
 		debug "Using unofficial Node.js builds..."
 
-		if $USE_LTS; then
+		if $NODE_USE_LTS; then
 			DOWNLOAD_VERSION=$(curl -Ls https://unofficial-builds.nodejs.org/download/release/index.tab | tail -n+2 | awk '$10!="-"' - | head -n 1 | cut -f 1)
 		else
 			DOWNLOAD_VERSION=$(curl -Ls https://unofficial-builds.nodejs.org/download/release/index.tab | tail -n+2 | head -n1 | cut -f 1)
@@ -190,19 +190,19 @@ if $INSTALL_NODE; then
 		curl -L "${DOWNLOAD_URL}" | tar xJ -C /usr/local --strip-components=1
 	else
 		# TODO: Fully respect optional `NODE_VERSION` environment variable
-		if $USE_LTS; then
-			NODESOURCE_URL=https://deb.nodesource.com/setup_lts.x
+		if $NODE_USE_LTS; then
+			NODE_DOWNLOAD_NODESOURCE_URL=https://deb.nodesource.com/setup_lts.x
 		else
-			NODESOURCE_URL=https://deb.nodesource.com/setup_current.x
+			NODE_DOWNLOAD_NODESOURCE_URL=https://deb.nodesource.com/setup_current.x
 		fi
 
-		if $USE_NODESOURCE_INSTALL_SCRIPT; then
+		if $NODE_USE_NODESOURCE_INSTALL_SCRIPT; then
 			debug "Using official Nodesource installer script"
-			curl -sL ${NODESOURCE_URL} --retry 1 | bash -
+			curl -sL ${NODE_DOWNLOAD_NODESOURCE_URL} --retry 1 | bash -
 		else
 			debug "Manually adding Nodesource to apt"
 			if [[ -z "$NODE_VERSION" ]]; then
-				NODE_VERSION=$(curl -sL ${NODESOURCE_URL} --retry 1 | grep NODEREPO= | sed -E 's/^NODEREPO="([^"]+)"$/\1/g')
+				NODE_VERSION=$(curl -sL ${NODE_DOWNLOAD_NODESOURCE_URL} --retry 1 | grep NODEREPO= | sed -E 's/^NODEREPO="([^"]+)"$/\1/g')
 			fi
 
 			curl -sL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor > /usr/share/keyrings/nodesource.gpg
@@ -223,9 +223,9 @@ apt-get -qq upgrade -y --auto-remove
 
 # Install Essentials
 debug "Packages"
-apt-get -qq install -y --auto-remove vim screen git python3{,-pip} $(${USE_UNOFFICIAL_ARM6} || ${INSTALL_NODE} && echo nodejs)
+apt-get -qq install -y --auto-remove vim screen git python3{,-pip} $(${NODE_USE_UNOFFICIAL_ARM6} || ${NODE_INSTALL} && echo nodejs)
 
-if $UPDATE_NPM; then
+if $NODE_UPDATE_NPM; then
 	debug "Update Npm"
 	npm install --global npm
 fi
