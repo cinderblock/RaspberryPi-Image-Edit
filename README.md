@@ -34,6 +34,7 @@ sudo ./grow.sh 2020-05-27-raspios-buster-lite-armhf.img [megabytes]
 ./new.sh [image-path]
 # `setup.sh` is meant to be run on a Raspberry Pi image in a chroot.
 sudo ./edit-boot.sh 2020-05-27-raspios-buster-lite-armhf.img
+./get-latest.sh
 ```
 
 The default `setup.sh` script **will fail** unless you `grow` the standard `.img` by ~400MB first *(as of 2021-07-15)*.
@@ -114,6 +115,12 @@ It might run succesfully running directly on a Pi, but that is not a supported u
 ### Edit Boot
 
 A simplified mounting of the filesystem that only accesses the image's `/boot` parition.
+
+### Get Latest `get-latest.sh`
+
+Download the official latest version of raspios-lite.
+Don't overwrite if it already exists.
+Continue downloading if previously interrupted.
 
 ## See also
 
