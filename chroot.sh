@@ -137,6 +137,10 @@ if grep -qi Microsoft /proc/version; then
 fi
 
 if [[ ! -z "${EXEC}" ]]; then
+	if [[ ! -x "${EXEC}" ]]; then
+		debug "Target binary is not executable! This will probabyl fail now..."
+	fi
+
 	# Location in chroot that the executable will be run from
 	EXEC_MNT=${TMP}/EXEC
 
