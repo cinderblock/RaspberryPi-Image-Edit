@@ -222,20 +222,20 @@ apt-get -qq upgrade -y --auto-remove
 debug "Packages"
 apt-get -qq install -y --auto-remove vim screen git python3{,-pip} $(${USE_UNOFFICIAL_ARM6} || ${INSTALL_NODE} && echo nodejs)
 
-debug "Set sensible defaults..."
-
+debug "Add nice caption to GNU screen"
 # This is a nice colorful "status" line that shows which tab you're on in screen. You're welcome ;)
 echo "caption always '%{= dg} %H %{G}| %{B}%l %{G}|%=%?%{d}%-w%?%{r}(%{d}%n %t%? {%u} %?%{r})%{d}%?%+w%?%=%{G}| %{B}%M %d %c:%s '" >> /etc/screenrc
 
-# Set default editor
+debug "Set default editor"
 #update-alternatives --set editor /usr/bin/vim.basic
 # Instead of "manually" setting vim as our editor, set nano to a much lower priority than normal
 update-alternatives --install /usr/bin/editor editor /bin/nano 10
 
-# Set python default version
+debug "Set python default version to 3"
 update-alternatives --install /usr/bin/python python /usr/bin/python3 3
 update-alternatives --install /usr/bin/python python /usr/bin/python2 2
 
+debug "apt clean"
 # apt-get -qq clean
 
 debug "Done!"
