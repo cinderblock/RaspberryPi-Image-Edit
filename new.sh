@@ -34,7 +34,7 @@ fi
 debug "Growing image"
 
 # Grow by 400MB
-sudo ./grow.sh ${IMG} 400
+sudo ./grow.sh ${IMG} 600
 
 debug "Preparing image"
 
