@@ -129,8 +129,11 @@ if [[ ! -z "${DEBUG_CHROOT}" ]]; then
 fi
 
 if grep -qi Microsoft /proc/version; then
-	# Fix common binfmts issue on WSL
-	chroot ${MNT} /bin/true || sudo update-binfmts --enable
+	debug "WSL detected. Checking if fix is needed..."
+	if !chroot ${MNT} /bin/true 2> /dev/null; then
+	  debug "Fixing binfmts"
+		update-binfmts --enable
+	fi
 fi
 
 if [[ ! -z "${EXEC}" ]]; then
