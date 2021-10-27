@@ -169,6 +169,8 @@ USE_UNOFFICIAL_ARM6=${ARM6}
 # Use their long slow script?
 USE_NODESOURCE_INSTALL_SCRIPT=false
 
+UPDATE_NPM=true
+
 if $INSTALL_NODE; then
 	# Add Node.js sources
 	debug "Add Node.js Sources..."
@@ -221,6 +223,11 @@ apt-get -qq upgrade -y --auto-remove
 # Install Essentials
 debug "Packages"
 apt-get -qq install -y --auto-remove vim screen git python3{,-pip} $(${USE_UNOFFICIAL_ARM6} || ${INSTALL_NODE} && echo nodejs)
+
+if $UPDATE_NPM; then
+	debug "Update Npm"
+	npm install --global npm
+fi
 
 debug "Add nice caption to GNU screen"
 # This is a nice colorful "status" line that shows which tab you're on in screen. You're welcome ;)
