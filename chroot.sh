@@ -128,7 +128,7 @@ if [[ ! -z "${DEBUG_CHROOT}" ]]; then
 	chroot ${MNT} /bin/true || echo "Your binfmt-misc registration is broken. Check contents of /proc/sys/fs/binfmt_misc. Maybe run \`sudo update-binfmts --enable\`."
 fi
 
-if grep -q Microsoft /proc/version; then
+if grep -qi Microsoft /proc/version; then
 	# Fix common binfmts issue on WSL
 	chroot ${MNT} /bin/true || sudo update-binfmts --enable
 fi
