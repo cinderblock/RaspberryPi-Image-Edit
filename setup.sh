@@ -187,7 +187,7 @@ if $NODE_INSTALL; then
 
 		DOWNLOAD_URL=https://unofficial-builds.nodejs.org/download/release/${DOWNLOAD_VERSION}/node-${DOWNLOAD_VERSION}-linux-armv6l.tar.xz
 
-		curl -L "${DOWNLOAD_URL}" | tar xJ -C /usr/local --strip-components=1
+		curl -sL "${DOWNLOAD_URL}" | tar xJ -C /usr/local --strip-components=1
 	else
 		# TODO: Fully respect optional `NODE_VERSION` environment variable
 		if $NODE_USE_LTS; then
