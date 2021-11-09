@@ -38,6 +38,9 @@ PYTHON3_DEFAULT=true
 VIM_INSTALL=true
 VIM_DEFAULT=true
 
+# SSHd passwords
+SSHD_DISABLE_PASSWORD_AUTH=true
+
 ### END OF VARIABLES
 
 # If any error happens, why try to continue. Bubble the error.
@@ -111,7 +114,9 @@ fi
 # Enable SSHD, without passwords
 debug "Enable SSH..."
 systemctl enable ssh
-echo PasswordAuthentication no >> /etc/ssh/sshd_config
+if $SSHD_DISABLE_PASSWORD_AUTH; then
+	echo PasswordAuthentication no >> /etc/ssh/sshd_config
+fi
 
 # Add WiFi config
 debug "WiFi Example..."
