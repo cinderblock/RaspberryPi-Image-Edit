@@ -2,24 +2,45 @@
 
 # This is meant to be run on Raspberry Pi OS to setup the system the way you want.
 
-TIMEZONE=America/Los_Angeles
+## Freeform Options
+TIMEZONE="America/Los_Angeles"
+PACKAGES="git"
+LOCALE="en_US.UTF-8 UTF-8"
+PASSWORD_PI="blueberry"
+KEYS_GH="cinderblock"
+
+## Binary Options
 # Make sure these are `true` or `false`
 
 # For Pi Zero
 ARM6=true
 
+# Node.js
 NODE_INSTALL=true
+
 NODE_USE_LTS=true
 
-NODE_USE_UNOFFICIAL_ARM6=${ARM6}
-# Use their long slow script?
+NODE_USE_UNOFFICIAL=${ARM6}
+# Use the official (long and slow) install script?
 NODE_USE_NODESOURCE_INSTALL_SCRIPT=false
 
 NODE_UPDATE_NPM=true
 
+# GNU Screen
+SCREEN_INSTALL=true
+SCREEN_HARDSTATUS=true
+
+# Python 3
+PYTHON3_INSTALL=true
+PYTHON3_DEFAULT=true
+
+# Vim
+VIM_INSTALL=true
+VIM_DEFAULT=true
 
 ### END OF VARIABLES
 
+# If any error happens, why try to continue. Bubble the error.
 set -e
 
 
@@ -40,9 +61,15 @@ function error {
 	df -h /
 }
 
+function addPackages {
+	PACKAGES+=" $@"
+}
+
 trap error ERR
 
 # Set locale to US
+
+if [[ ! -z ${LOCALE} ]]; then
 debug "Locale..."
 echo en_US.UTF-8 UTF-8 > /etc/locale.gen
 locale-gen
@@ -51,26 +78,35 @@ update-locale LANG=en_US.UTF-8
 #echo "$LOCALE $ENCODING" > /etc/locale.gen
 #sed -i "s/^\s*LANG=\S*/LANG=$LOCALE/" /etc/default/locale
 #dpkg-reconfigure -f noninteractive locales
+fi
 
+if [[ ! -z ${KB_LAYOUT} ]]; then
 # TODO: Setup keyboard layout
 # raspi-config:
 #sed -i /etc/default/keyboard -e "s/^XKBLAYOUT.*/XKBLAYOUT=\"$KEYMAP\"/"
 #dpkg-reconfigure -f noninteractive keyboard-configuration
+:
+fi
 
+if [[ ! -z ${PASSWORD_PI} ]]; then
 # Set password
 debug "Seting Pi's Password..."
 # Set directly, no promt, in plaintext
-echo "pi:password" | chpasswd
+echo "pi:${PASSWORD_PI}" | chpasswd
 # Ask for the new password mid script
 #passwd pi
+fi
 
+if [[ ! -z ${KEYS_GH} ]]; then
 # Add SSH keys
 debug "Keys..."
-sudo -u pi bash -e <<- EOF_PI
+sudo -u pi bash -e << EOF_PI
 	mkdir -p ~/.ssh
-	curl -sL https://github.com/cinderblock.keys > ~/.ssh/authorized_keys
+	curl -sL https://github.com/${KEYS_GH}.keys > ~/.ssh/authorized_keys
 	echo "sudo raspi-config" > ~/.bash_history
 EOF_PI
+# TODO: pull out the "raspi-config" from this if block
+fi
 
 # Enable SSHD, without passwords
 debug "Enable SSH..."
@@ -173,10 +209,9 @@ ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
 debug "After : $(date)"
 
 if $NODE_INSTALL; then
-	# Add Node.js sources
-	debug "Add Node.js Sources..."
+	debug "Installing Node.js..."
 
-	if $NODE_USE_UNOFFICIAL_ARM6; then
+	if $NODE_USE_UNOFFICIAL; then
 		debug "Using unofficial Node.js builds..."
 
 		if $NODE_USE_LTS; then
@@ -210,8 +245,24 @@ if $NODE_INSTALL; then
 				deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/${NODE_VERSION} buster main
 				deb-src [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/${NODE_VERSION} buster main
 			EOF_NODE
+
+			addPackages nodejs
 		fi
 	fi
+fi
+
+if $PYTHON3_INSTALL; then
+	addPackages python3{,-pip}
+fi
+
+if $PIGPIO_API; then
+	addPackages libpigpio-dev
+	if $PIGPIO_NODE_HACK; then
+		# Workaround bad node-pigpio issues
+		ln -snf /usr/bin/false /usr/local/bin/pigpiod
+	fi
+elif $PIGPIO_DAEMON; then
+	addPackages pigpiod
 fi
 
 # Update
@@ -222,26 +273,39 @@ debug "Upgrade"
 apt-get -qq upgrade -y --auto-remove
 
 # Install Essentials
-debug "Packages"
-apt-get -qq install -y --auto-remove vim screen git python3{,-pip} $(${NODE_USE_UNOFFICIAL_ARM6} || ${NODE_INSTALL} && echo nodejs)
+debug "Installing Packages: ${PACKAGES}"
+apt-get -qq install -y --auto-remove ${PACKAGES}
 
+if $NODE_INSTALL; then
 if $NODE_UPDATE_NPM; then
 	debug "Update Npm"
 	npm install --global npm
 fi
 
+if $NODE_INSTALL_YARN; then
+	debug "Installing Yarn"
+	npm install --global yarn
+fi
+fi
+
+if $SCREEN_INSTALL && $SCREEN_HARDSTATUS; then
 debug "Add nice caption to GNU screen"
 # This is a nice colorful "status" line that shows which tab you're on in screen. You're welcome ;)
 echo "caption always '%{= dg} %H %{G}| %{B}%l %{G}|%=%?%{d}%-w%?%{r}(%{d}%n %t%? {%u} %?%{r})%{d}%?%+w%?%=%{G}| %{B}%M %d %c:%s '" >> /etc/screenrc
+fi
 
-debug "Set default editor"
+if $VIM_INSTALL && $VIM_DEFAULT; then
+debug "Set default editor to Vim"
 #update-alternatives --set editor /usr/bin/vim.basic
 # Instead of "manually" setting vim as our editor, set nano to a much lower priority than normal
 update-alternatives --install /usr/bin/editor editor /bin/nano 10
+fi
 
+if $PYTHON3_INSTALL && $PYTHON3_DEFAULT; then
 debug "Set python default version to 3"
 update-alternatives --install /usr/bin/python python /usr/bin/python3 3
 update-alternatives --install /usr/bin/python python /usr/bin/python2 2
+fi
 
 debug "apt clean"
 # apt-get -qq clean
