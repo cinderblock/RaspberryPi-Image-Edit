@@ -11,6 +11,11 @@ cd RaspberryPi-Image-Generator
 ./new.sh
 ```
 
+#### With already downloaded img zip
+```bash
+./new.sh path-to-raspbian.img.zip
+```
+
 ## Manual Mode
 
 1. Download a Raspberry Pi OS image and unzip it:

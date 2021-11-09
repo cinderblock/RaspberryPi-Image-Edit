@@ -70,42 +70,42 @@ trap error ERR
 # Set locale to US
 
 if [[ ! -z ${LOCALE} ]]; then
-debug "Locale..."
-echo en_US.UTF-8 UTF-8 > /etc/locale.gen
-locale-gen
-update-locale LANG=en_US.UTF-8
-# From raspi-config
-#echo "$LOCALE $ENCODING" > /etc/locale.gen
-#sed -i "s/^\s*LANG=\S*/LANG=$LOCALE/" /etc/default/locale
-#dpkg-reconfigure -f noninteractive locales
+	debug "Locale..."
+	echo en_US.UTF-8 UTF-8 > /etc/locale.gen
+	locale-gen
+	update-locale LANG=en_US.UTF-8
+	# From raspi-config
+	#echo "$LOCALE $ENCODING" > /etc/locale.gen
+	#sed -i "s/^\s*LANG=\S*/LANG=$LOCALE/" /etc/default/locale
+	#dpkg-reconfigure -f noninteractive locales
 fi
 
 if [[ ! -z ${KB_LAYOUT} ]]; then
-# TODO: Setup keyboard layout
-# raspi-config:
-#sed -i /etc/default/keyboard -e "s/^XKBLAYOUT.*/XKBLAYOUT=\"$KEYMAP\"/"
-#dpkg-reconfigure -f noninteractive keyboard-configuration
-:
+	# TODO: Setup keyboard layout
+	# raspi-config:
+	#sed -i /etc/default/keyboard -e "s/^XKBLAYOUT.*/XKBLAYOUT=\"$KEYMAP\"/"
+	#dpkg-reconfigure -f noninteractive keyboard-configuration
+	:
 fi
 
 if [[ ! -z ${PASSWORD_PI} ]]; then
-# Set password
-debug "Seting Pi's Password..."
-# Set directly, no promt, in plaintext
-echo "pi:${PASSWORD_PI}" | chpasswd
-# Ask for the new password mid script
-#passwd pi
+	# Set password
+	debug "Seting Pi's Password..."
+	# Set directly, no promt, in plaintext
+	echo "pi:${PASSWORD_PI}" | chpasswd
+	# Ask for the new password mid script
+	#passwd pi
 fi
 
 if [[ ! -z ${KEYS_GH} ]]; then
-# Add SSH keys
-debug "Keys..."
-sudo -u pi bash -e << EOF_PI
-	mkdir -p ~/.ssh
-	curl -sL https://github.com/${KEYS_GH}.keys > ~/.ssh/authorized_keys
-	echo "sudo raspi-config" > ~/.bash_history
-EOF_PI
-# TODO: pull out the "raspi-config" from this if block
+	# Add SSH keys
+	debug "Keys..."
+	sudo -u pi bash -e <<- EOF_PI
+		mkdir -p ~/.ssh
+		curl -sL https://github.com/${KEYS_GH}.keys > ~/.ssh/authorized_keys
+		echo "sudo raspi-config" > ~/.bash_history
+	EOF_PI
+	# TODO: pull out the "raspi-config" from this if block
 fi
 
 # Enable SSHD, without passwords
@@ -289,22 +289,22 @@ fi
 fi
 
 if $SCREEN_INSTALL && $SCREEN_HARDSTATUS; then
-debug "Add nice caption to GNU screen"
-# This is a nice colorful "status" line that shows which tab you're on in screen. You're welcome ;)
-echo "caption always '%{= dg} %H %{G}| %{B}%l %{G}|%=%?%{d}%-w%?%{r}(%{d}%n %t%? {%u} %?%{r})%{d}%?%+w%?%=%{G}| %{B}%M %d %c:%s '" >> /etc/screenrc
+	debug "Add nice caption to GNU screen"
+	# This is a nice colorful "status" line that shows which tab you're on in screen. You're welcome ;)
+	echo "caption always '%{= dg} %H %{G}| %{B}%l %{G}|%=%?%{d}%-w%?%{r}(%{d}%n %t%? {%u} %?%{r})%{d}%?%+w%?%=%{G}| %{B}%M %d %c:%s '" >> /etc/screenrc
 fi
 
 if $VIM_INSTALL && $VIM_DEFAULT; then
-debug "Set default editor to Vim"
-#update-alternatives --set editor /usr/bin/vim.basic
-# Instead of "manually" setting vim as our editor, set nano to a much lower priority than normal
-update-alternatives --install /usr/bin/editor editor /bin/nano 10
+	debug "Set default editor to Vim"
+	#update-alternatives --set editor /usr/bin/vim.basic
+	# Instead of "manually" setting vim as our editor, set nano to a much lower priority than normal
+	update-alternatives --install /usr/bin/editor editor /bin/nano 10
 fi
 
 if $PYTHON3_INSTALL && $PYTHON3_DEFAULT; then
-debug "Set python default version to 3"
-update-alternatives --install /usr/bin/python python /usr/bin/python3 3
-update-alternatives --install /usr/bin/python python /usr/bin/python2 2
+	debug "Set python default version to 3"
+	update-alternatives --install /usr/bin/python python /usr/bin/python3 3
+	update-alternatives --install /usr/bin/python python /usr/bin/python2 2
 fi
 
 debug "apt clean"
