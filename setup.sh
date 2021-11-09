@@ -262,6 +262,14 @@ if $NODE_INSTALL; then
 	fi
 fi
 
+if $SCREEN_INSTALL; then
+	addPackages screen
+fi
+
+if $VIM_INSTALL; then
+	addPackages vim
+fi
+
 if $PYTHON3_INSTALL; then
 	addPackages python3{,-pip}
 fi
