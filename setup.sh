@@ -41,6 +41,12 @@ VIM_DEFAULT=true
 # SSHd passwords
 SSHD_DISABLE_PASSWORD_AUTH=true
 
+# Caddy
+CADDY_INSTALL=false
+CADDY_ARM6=${ARM6}
+CADDY_CADDYFLE=true
+CADDY_MKROOT=true
+
 ### END OF VARIABLES
 
 # If any error happens, why try to continue. Bubble the error.
@@ -270,6 +276,33 @@ elif $PIGPIO_DAEMON; then
 	addPackages pigpiod
 fi
 
+if $CADDY_INSTALL; then
+	debug "Caddy"
+	curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo tee /etc/apt/trusted.gpg.d/caddy-stable.asc
+	curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+
+	addPackages caddy
+	if $CADDY_ARM6; then
+		dpkg-divert --package caddy --add --rename --divert /usr/bin/caddy{.orig,}
+		wget 'https://caddyserver.com/api/download?os=linux&arch=arm&arm=6' -O /usr/bin/caddy
+		chmod +x /usr/bin/caddy
+	fi
+
+	if $CADDY_CADDYFLE; then
+		cat <<- 'EOF_CADDYFILE' > /etc/caddy/Caddyfile
+			:80 {
+				root * /var/www/html
+				file_server
+				reverse_proxy /socket.io/* localhost:8000
+			}
+		EOF_CADDYFILE
+	fi
+
+	if $CADDY_MKROOT; then
+		mkdir -p /var/www/html
+		chown pi: /var/www/html
+	fi
+fi
 # Update
 debug "Update"
 apt-get -qq update
