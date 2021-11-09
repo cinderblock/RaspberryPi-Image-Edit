@@ -305,9 +305,11 @@ if $CADDY_INSTALL; then
 fi
 # Update
 debug "Update"
+#apt-get update | awk 1 ORS='                                                                                              \r'; echo ''
 apt-get -qq update
 
 debug "Upgrade"
+#apt-get upgrade -y --auto-remove | awk 1 ORS='                                                                                              \r'; echo ''
 apt-get -qq upgrade -y --auto-remove
 
 # Install Essentials
