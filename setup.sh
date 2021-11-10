@@ -47,6 +47,10 @@ CADDY_ARM6=${ARM6}
 CADDY_CADDYFLE=true
 CADDY_MKROOT=true
 
+# Teensy Loader
+TEENSY_LOADER_CLI_INSTALL=false
+TEENSY_LOADER_CLI_INSTALL_FROM_SOURCE=true
+
 ### END OF VARIABLES
 
 # If any error happens, why try to continue. Bubble the error.
@@ -311,6 +315,15 @@ if $CADDY_INSTALL; then
 		chown pi: /var/www/html
 	fi
 fi
+
+if $TEENSY_LOADER_CLI_INSTALL; then
+	addPackages teensy-loader-cli
+fi
+
+if $TEENSY_LOADER_CLI_INSTALL_FROM_SOURCE; then
+	addPackages libusb-dev
+fi
+
 # Update
 debug "Update"
 #apt-get update | awk 1 ORS='                                                                                              \r'; echo ''
@@ -353,6 +366,16 @@ if $PYTHON3_INSTALL && $PYTHON3_DEFAULT; then
 	debug "Set python default version to 3"
 	update-alternatives --install /usr/bin/python python /usr/bin/python3 3
 	update-alternatives --install /usr/bin/python python /usr/bin/python2 2
+fi
+
+if $TEENSY_LOADER_CLI_INSTALL_FROM_SOURCE; then
+	curl -s https://www.pjrc.com/teensy/00-teensy.rules > /etc/udev/rules.d/00-teensy.rules
+
+	git clone -q https://github.com/PaulStoffregen/teensy_loader_cli /tmp/teensy_loader_cli
+	pushd /tmp/teensy_loader_cli
+	make teensy_loader_cli
+	cp teensy_loader_cli /usr/local/bin/
+	popd
 fi
 
 debug "apt clean"
