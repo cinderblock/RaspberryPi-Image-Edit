@@ -321,7 +321,7 @@ if $TEENSY_LOADER_CLI_INSTALL; then
 fi
 
 if $TEENSY_LOADER_CLI_INSTALL_FROM_SOURCE; then
-	addPackages libusb-dev
+	addPackages libusb-dev git build-essential
 fi
 
 # Update
