@@ -114,7 +114,7 @@ fi
 
 if [[ ! -z ${KEYS} ]]; then
 	# Add SSH keys
-	debug "Keys..."
+	debug "Keys from ${KEYS}"
 	sudo -u pi bash -e <<- EOF_PI
 		mkdir -p ~/.ssh
 		curl -sL ${KEYS} > ~/.ssh/authorized_keys
