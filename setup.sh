@@ -12,6 +12,8 @@ KEYS="https://github.com/cinderblock.keys"
 ## Binary Options
 # Make sure these are `true` or `false`
 
+RASPI_CONFIG_IN_HISTORY=true
+
 # For Pi Zero
 ARM6=true
 
@@ -116,9 +118,12 @@ if [[ ! -z ${KEYS} ]]; then
 	sudo -u pi bash -e <<- EOF_PI
 		mkdir -p ~/.ssh
 		curl -sL ${KEYS} > ~/.ssh/authorized_keys
-		echo "sudo raspi-config" > ~/.bash_history
 	EOF_PI
-	# TODO: pull out the "raspi-config" from this if block
+fi
+
+if $RASPI_CONFIG_IN_HISTORY; then
+  echo "sudo raspi-config" > /home/pi/.bash_history
+	chown pi: /home/pi/.bash_history
 fi
 
 # Enable SSHD, without passwords
