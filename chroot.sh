@@ -138,7 +138,7 @@ fi
 
 if [[ ! -z "${EXEC}" ]]; then
 	if [[ ! -x "${EXEC}" ]]; then
-		debug "Target binary is not executable! This will probabyl fail now..."
+		debug "${YELLOW}Target binary is not executable! This will probably fail now...${NC}"
 	fi
 
 	# Location in chroot that the executable will be run from
