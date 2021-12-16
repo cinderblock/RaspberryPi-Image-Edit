@@ -7,7 +7,7 @@ TIMEZONE="America/Los_Angeles"
 PACKAGES="git"
 LOCALE="en_US.UTF-8 UTF-8"
 PASSWORD_PI="blueberry"
-KEYS_GH="cinderblock"
+KEYS="https://github.com/cinderblock.keys"
 
 ## Binary Options
 # Make sure these are `true` or `false`
@@ -110,12 +110,12 @@ if [[ ! -z ${PASSWORD_PI} ]]; then
 	#passwd pi
 fi
 
-if [[ ! -z ${KEYS_GH} ]]; then
+if [[ ! -z ${KEYS} ]]; then
 	# Add SSH keys
 	debug "Keys..."
 	sudo -u pi bash -e <<- EOF_PI
 		mkdir -p ~/.ssh
-		curl -sL https://github.com/${KEYS_GH}.keys > ~/.ssh/authorized_keys
+		curl -sL ${KEYS} > ~/.ssh/authorized_keys
 		echo "sudo raspi-config" > ~/.bash_history
 	EOF_PI
 	# TODO: pull out the "raspi-config" from this if block
