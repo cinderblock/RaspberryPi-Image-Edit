@@ -28,7 +28,7 @@ else
 	IMG=${1:-$IMG}
 	debug "Downloading to: ${IMG}"
 	# They always provide exactly one file, the `.img` we care about.
-	curl -L https://downloads.raspberrypi.org/raspios_lite_armhf_latest | zcat > ${IMG}
+	curl -L https://downloads.raspberrypi.org/raspios_lite_armhf_latest | xzcat > ${IMG}
 fi
 
 debug "Growing image"
