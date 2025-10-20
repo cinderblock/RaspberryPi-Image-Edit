@@ -92,6 +92,7 @@ TMP=/tmp
 debug "Mounting rest of filesystem"
 mount -o noatime "${LOOP}p1" "${MNT}/boot"
 # Needed by chroot
+touch "${MNT}/etc/ld.so.preload"
 mount -o bind,ro /dev/null "${MNT}/etc/ld.so.preload"
 # Current DNS
 mount -o bind,ro "$(realpath /etc/resolv.conf)" "${MNT}/etc/resolv.conf"
